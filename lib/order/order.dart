@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:helphin/order/detail_order/detailOrder.dart';
 
 class OrderPage extends StatefulWidget {
   const OrderPage({super.key});
@@ -412,7 +413,12 @@ class _OrderPageState extends State<OrderPage> {
                         ),
                       ),
                       onPressed: () {
-                        // Aksi tombol
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const DetailOrder(),
+                          ),
+                        );
                       },
                       child: const Text(
                         "Lanjutkan",
