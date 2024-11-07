@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:helphin/order/detail_order/detailOrder.dart';
@@ -11,13 +13,20 @@ class OrderPage extends StatefulWidget {
 
 class _OrderPageState extends State<OrderPage> {
   String? fileName;
-  String? selectedOption;
+  File? pickedImage;
+  String selectedOption = '';
+  TextEditingController descContoller = TextEditingController();
+  TextEditingController matkulController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
   Future<void> _pickFile() async {
-    final result = await FilePicker.platform.pickFiles();
+    final result = await FilePicker.platform.pickFiles(
+      allowMultiple: true,
+    );
     if (result != null) {
       setState(() {
         fileName = result.files.single.name;
+        pickedImage = File(result.files.single.path!); // Get the file path
       });
     }
   }
@@ -45,7 +54,7 @@ class _OrderPageState extends State<OrderPage> {
                   child: Container(
                     width: MediaQuery.of(context).size.width,
                     height: 3,
-                    color: Color(0xFFD8D8D8),
+                    color: const Color(0xFFD8D8D8),
                   ),
                 ),
                 const SizedBox(
@@ -66,7 +75,7 @@ class _OrderPageState extends State<OrderPage> {
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: Container(
                           decoration: BoxDecoration(
-                              color: Color(0xFFCEE3FF).withOpacity(0.5),
+                              color: const Color(0xFFCEE3FF).withOpacity(0.5),
                               borderRadius: BorderRadius.circular(8)),
                           child: RadioListTile<String>(
                             title: const Text(
@@ -75,25 +84,26 @@ class _OrderPageState extends State<OrderPage> {
                                   color: Color(0xFF438EF2),
                                   fontWeight: FontWeight.bold),
                             ),
+                            controlAffinity: ListTileControlAffinity.trailing,
                             value: 'Online',
                             groupValue: selectedOption,
                             onChanged: (value) {
                               setState(() {
-                                selectedOption = value;
+                                selectedOption = value!;
                               });
                               Navigator.pop(context);
                             },
                           ),
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: Container(
                           decoration: BoxDecoration(
-                              color: Color(0xFFCEE3FF).withOpacity(0.5),
+                              color: const Color(0xFFCEE3FF).withOpacity(0.5),
                               borderRadius: BorderRadius.circular(8)),
                           child: RadioListTile<String>(
                             title: const Text(
@@ -102,11 +112,12 @@ class _OrderPageState extends State<OrderPage> {
                                   color: Color(0xFF438EF2),
                                   fontWeight: FontWeight.bold),
                             ),
+                            controlAffinity: ListTileControlAffinity.trailing,
                             value: 'Onsite',
                             groupValue: selectedOption,
                             onChanged: (value) {
                               setState(() {
-                                selectedOption = value;
+                                selectedOption = value!;
                               });
                               Navigator.pop(context);
                             },
@@ -195,193 +206,246 @@ class _OrderPageState extends State<OrderPage> {
       body: SafeArea(
         child: Stack(
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  height: 2.0,
-                  color: const Color(0xFF438EF2),
-                ),
-                Container(
-                  height: 54,
-                  width: MediaQuery.of(context).size.width,
-                  color: const Color(0x33CEE3FF),
-                  child: const Align(
-                    alignment: Alignment.centerLeft,
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 25),
-                      child: Text(
-                        "MATEMATIKA",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
+            Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    height: 2.0,
+                    color: const Color(0xFF438EF2),
+                  ),
+                  Container(
+                    height: 54,
+                    width: MediaQuery.of(context).size.width,
+                    color: const Color(0x33CEE3FF),
+                    child: const Align(
+                      alignment: Alignment.centerLeft,
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 25),
+                        child: Text(
+                          "MATEMATIKA",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 10),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 27),
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 20),
-                        child: TextField(
-                          decoration: InputDecoration(
-                            hintStyle: TextStyle(color: Color(0xFFB2B2B2)),
-                            hintText: 'Mata Kuliah',
-                            filled: true,
-                            fillColor: Colors.white,
-                            contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 16.0, vertical: 12.0),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: const BorderSide(
-                                color: Color(0xFFB2B2B2),
-                                width: 1.0,
-                              ),
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: const BorderSide(
-                                color: Colors.blue,
-                                width: 1.0,
-                              ),
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                        child: InkWell(
-                          onTap: _pickFile,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(8.0),
-                              border: Border.all(color: Colors.grey),
-                            ),
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 16.0, vertical: 12.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  children: [
-                                    const Icon(
-                                      Icons.image_outlined,
-                                      color: Color(0xFFAEAEAE),
-                                      size: 30,
-                                    ),
-                                    const SizedBox(width: 10),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          fileName ??
-                                              'Unggah File yang mau kamu tanyakan',
-                                          style: TextStyle(
-                                            color: fileName != null
-                                                ? Colors.black
-                                                : const Color(0xFF8E8E8E),
-                                          ),
-                                        ),
-                                        const Text(
-                                          "DOC, PDF, JPG dibawah 1MB",
-                                          style: TextStyle(
-                                              fontSize: 11,
-                                              color: Color(0xFFAEAEAE)),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          FocusScope.of(context).unfocus();
-                        },
-                        child: SizedBox(
-                          width: MediaQuery.of(context).size.width,
-                          child: TextField(
-                            autocorrect: false,
-                            enableSuggestions: false,
+                  const SizedBox(height: 10),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 27),
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 20),
+                          child: TextFormField(
+                            controller: matkulController,
+                            textCapitalization: TextCapitalization.characters,
                             decoration: InputDecoration(
                               hintStyle:
-                                  const TextStyle(color: Color(0xFFC4C4C4)),
-                              hintText:
-                                  'Deskripsikan kebutuhan atau pertanyaanmu kepada helper untuk mendapatkan bantuan yang tepat',
+                                  const TextStyle(color: Color(0xFFB2B2B2)),
+                              hintText: 'Mata Kuliah',
                               filled: true,
                               fillColor: Colors.white,
                               contentPadding: const EdgeInsets.symmetric(
                                   horizontal: 16.0, vertical: 12.0),
                               enabledBorder: OutlineInputBorder(
                                 borderSide: const BorderSide(
-                                    color: Color(0xFFB2B2B2), width: 1.0),
+                                  color: Color(0xFFB2B2B2),
+                                  width: 1.0,
+                                ),
                                 borderRadius: BorderRadius.circular(8.0),
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderSide: const BorderSide(
-                                    color: Colors.blue, width: 1.0),
+                                  color: Colors.blue,
+                                  width: 1.0,
+                                ),
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              errorBorder: OutlineInputBorder(
+                                borderSide: const BorderSide(
+                                  color: Colors.red,
+                                  width: 1.0,
+                                ),
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              focusedErrorBorder: OutlineInputBorder(
+                                borderSide: const BorderSide(
+                                  color: Colors.red,
+                                  width: 1.0,
+                                ),
                                 borderRadius: BorderRadius.circular(8.0),
                               ),
                             ),
-                            maxLines: null,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Mata kuliah harus diisi, ya';
+                              }
+                              return null; // Return null if the input is valid
+                            },
                           ),
                         ),
-                      ),
-                      const SizedBox(height: 15),
-                      Container(
-                        height: 54,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: const Color(0xFF438EF2),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text(
-                                "Bantuan Online/Onsite",
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          child: InkWell(
+                            onTap: _pickFile,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(8.0),
+                                border: Border.all(color: Colors.grey),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.all(10),
-                                child: Container(
-                                  width: 24,
-                                  height: 24,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(8),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16.0, vertical: 12.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  pickedImage == null
+                                      ? Row(
+                                          children: [
+                                            const Icon(
+                                              Icons.image_outlined,
+                                              color: Color(0xFFAEAEAE),
+                                              size: 30,
+                                            ),
+                                            const SizedBox(width: 10),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  'Unggah File yang mau kamu tanyakan',
+                                                  style: TextStyle(
+                                                    color: fileName != null
+                                                        ? Colors.black
+                                                        : const Color(
+                                                            0xFF8E8E8E),
+                                                  ),
+                                                ),
+                                                const Text(
+                                                  "DOC, PDF, JPG dibawah 1MB",
+                                                  style: TextStyle(
+                                                      fontSize: 11,
+                                                      color: Color(0xFFAEAEAE)),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        )
+                                      : Image.file(
+                                          pickedImage!,
+                                          width: 60,
+                                        ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            FocusScope.of(context).unfocus();
+                          },
+                          child: SizedBox(
+                            width: MediaQuery.of(context).size.width,
+                            child: TextFormField(
+                              validator: (val) {
+                                if (val == null || val.isEmpty) {
+                                  return 'Deskripsi harus diisi, ya';
+                                }
+                                return null;
+                              },
+                              controller: descContoller,
+                              autocorrect: false,
+                              enableSuggestions: false,
+                              decoration: InputDecoration(
+                                hintStyle:
+                                    const TextStyle(color: Color(0xFFC4C4C4)),
+                                hintText:
+                                    'Deskripsikan kebutuhan atau pertanyaanmu kepada helper untuk mendapatkan bantuan yang tepat',
+                                filled: true,
+                                fillColor: Colors.white,
+                                contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 16.0, vertical: 12.0),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: const BorderSide(
+                                      color: Color(0xFFB2B2B2), width: 1.0),
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                                errorBorder: OutlineInputBorder(
+                                  borderSide: const BorderSide(
+                                    color: Colors.red,
+                                    width: 1.0,
                                   ),
-                                  child: IconButton(
-                                    padding: EdgeInsets.zero,
-                                    icon: const Icon(
-                                      Icons.arrow_forward_ios_rounded,
-                                      color: Color(0xFF438EF2),
-                                      size: 14,
-                                    ),
-                                    onPressed: _showOptionSheet,
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                                focusedErrorBorder: OutlineInputBorder(
+                                  borderSide: const BorderSide(
+                                    color: Colors.red,
+                                    width: 1.0,
                                   ),
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: const BorderSide(
+                                      color: Colors.blue, width: 1.0),
+                                  borderRadius: BorderRadius.circular(8.0),
                                 ),
                               ),
-                            ],
+                              maxLines: null,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                        const SizedBox(height: 15),
+                        Container(
+                          height: 54,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: const Color(0xFF438EF2),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  "Bantuan Online/Onsite",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(10),
+                                  child: Container(
+                                    width: 24,
+                                    height: 24,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: IconButton(
+                                      padding: EdgeInsets.zero,
+                                      icon: const Icon(
+                                        Icons.arrow_forward_ios_rounded,
+                                        color: Color(0xFF438EF2),
+                                        size: 14,
+                                      ),
+                                      onPressed: _showOptionSheet,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
             Align(
               alignment: Alignment.bottomCenter,
@@ -413,12 +477,19 @@ class _OrderPageState extends State<OrderPage> {
                         ),
                       ),
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const DetailOrder(),
-                          ),
-                        );
+                        if (_formKey.currentState!.validate()) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DetailOrder(
+                                layanan: selectedOption,
+                                description: descContoller.text,
+                                matkul: matkulController.text,
+                                image: pickedImage!,
+                              ),
+                            ),
+                          );
+                        }
                       },
                       child: const Text(
                         "Lanjutkan",
