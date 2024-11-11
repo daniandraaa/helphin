@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:helphin/order/detail_order/detailOrder.dart';
+import 'package:helphin/order/map%20page/map_page.dart';
+// import 'package:helphin/order/detail_order/detailOrder.dart';
 import 'package:helphin/order/order.dart';
 
 void main() {
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const OrderPage(),
+      home: const MapPage(),
       debugShowCheckedModeBanner: false,
     );
   }

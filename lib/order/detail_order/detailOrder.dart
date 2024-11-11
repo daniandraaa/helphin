@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:helphin/controller/currenct.dart';
-import 'package:helphin/order/order.dart';
+// import 'package:helphin/order/order.dart';
 import 'package:helphin/order/order_done/page.dart';
-import 'package:intl/intl.dart';
+// import 'package:intl/intl.dart';
 
 class DetailOrder extends StatefulWidget {
   const DetailOrder({
@@ -135,7 +135,9 @@ class _DetailOrderState extends State<DetailOrder> {
                       ),
                       onPressed: () {
                         setState(() {
-                          harga = int.parse(hargaController.text);
+                          String hargaText = hargaController.text
+                              .replaceAll(RegExp(r'[^\d]'), '');
+                          harga = int.parse(hargaText);
                         });
                         Navigator.pop(context);
                       },
@@ -327,6 +329,7 @@ class _DetailOrderState extends State<DetailOrder> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         centerTitle: false,
         title: const Text(
